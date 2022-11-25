@@ -4,7 +4,7 @@ if not Tests then return end
 local C = LibStub('C_Everywhere')
 local AreEqual = WoWUnit.AreEqual
 
-function Tests:SpaceTranslation()
+function Tests:NamespaceTranslation()
   local target = C_CVar and C_CVar.GetCVar or GetCVar
   AreEqual(target, C.CVar.GetCVar)
 end

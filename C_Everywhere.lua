@@ -28,7 +28,7 @@ setmetatable(C, {__index = function(C, space)
 
   setmetatable(container, {__index = function(container, k)
     local f = container.rawget(k)
-    assert(f, format('%s not found in C_%s nor global namespaces', k, space)
+    assert(f, format('%s not found in C_%s nor global namespaces', k, space))
     container[k] = f
     return f
   end})
@@ -40,29 +40,34 @@ setmetatable(C, {__index = function(C, space)
   return container
 end})
 
-
 local function pack(space, k, args)
   local f = space.rawget(k)
   if f then
-    local first = args:match('^%s*([^,]+)')
-    local assignment = {}
+    space[k] = function(...)
+      local data = f(...)
+      if data ~= nil then
+        if type(data) == 'table' then
+          space[k] = f
+          return data
+        else
+          local assignment = {}
+          for _, arg in ipairs{strsplit(',', args)} do
+            tinsert(assignment, arg .. '=' .. arg)
+          end
 
-    for _, arg in ipairs{strsplit(',', args)} do
-      tinsert(assignment, arg .. '=' .. arg)
-    end
+          local packer = loadstring(format([[
+            return function(...)
+              local %s = f(...)
+              return {%s}
+            end
+          ]], args, strjoin(',', unpack(assignment)), first))
 
-    local packer = loadstring(format([[
-      return function(...)
-        local %s = f(...)
-        if %s ~= nil and type(%s) ~= 'table' then
-          return {%s}
+          setfenv(packer, {f = f})
+          space[k] = packer()
+          return space[k](...)
         end
-        return %s
       end
-    ]], args, first, first, strjoin(',', unpack(assignment)), first))
-
-    setfenv(packer, {f = f, type = type, print = print})
-    space[k] = packer()
+    end
   end
 end
 
