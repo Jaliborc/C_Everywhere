@@ -1,0 +1,74 @@
+--[[
+Copyright 2022-2022 João Cardoso
+C_Everywhere is distributed under the terms of the GNU General Public License (Version 3).
+As a special exception, the copyright holders of this library give you permission to embed it
+with independent modules to produce an addon, regardless of the license terms of these
+independent modules, and to copy and distribute the resulting software under terms of your
+choice, provided that you also meet, for each embedded independent module, the terms and
+conditions of the license of that module. Permission is not granted to modify this library.
+
+This library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+This file is part of C_Everywhere.
+--]]
+
+local C = LibStub:NewLibrary('C_Everywhere', 1)
+if C then
+  wipe(C)
+else
+  return
+end
+
+setmetatable(C, {__index = function(C, space)
+  local target = _G['C_' .. space]
+  local container = {}
+
+  setmetatable(container, {__index = function(container, k)
+    local f = container.rawget(k)
+    assert(f, format('%s not found in C_%s nor global namespaces', k, space)
+    container[k] = f
+    return f
+  end})
+
+  container.rawget = function(k) return target and target[k] or _G[k] end
+  container.locate = function(k) return target and target[k] and target or _G end
+  container.hooksecurefunc = function(k, f) hooksecurefunc(container.locate(k), k, f) end
+  C[space] = container
+  return container
+end})
+
+
+local function pack(space, k, args)
+  local f = space.rawget(k)
+  if f then
+    local first = args:match('^%s*([^,]+)')
+    local assignment = {}
+
+    for _, arg in ipairs{strsplit(',', args)} do
+      tinsert(assignment, arg .. '=' .. arg)
+    end
+
+    local packer = loadstring(format([[
+      return function(...)
+        local %s = f(...)
+        if %s ~= nil and type(%s) ~= 'table' then
+          return {%s}
+        end
+        return %s
+      end
+    ]], args, first, first, strjoin(',', unpack(assignment)), first))
+
+    setfenv(packer, {f = f, type = type, print = print})
+    space[k] = packer()
+  end
+end
+
+pack(C.Container, 'GetContainerItemInfo', 'iconFileID, stackCount, isLocked, quality, isReadable, hasLoot, hyperlink, isFiltered, hasNoValue, itemID, isBound')
+pack(C.Container, 'GetContainerItemPurchaseInfo', 'money, itemCount, refundSeconds, currencyCount, hasEnchants')
+pack(C.Container, 'GetContainerItemQuestInfo', 'isQuestItem, questID, isActive')
+pack(C.CurrencyInfo, 'GetBackpackCurrencyInfo', 'name, quantity, iconFileID, currencyTypesID')
+pack(C.CurrencyInfo, 'GetCurrencyInfo', 'name, quantity, iconFileID, quantityEarnedThisWeek, maxWeeklyQuantity, maxQuantity, discovered, quality')
+pack(C.CurrencyInfo, 'GetCurrencyListInfo', 'name, isHeader, isHeaderExpanded, isTypeUnused, isShowInBackpack, quantity, iconFileID, maxQuantity, canEarnPerWeek, quantityEarnedThisWeek, discovered')
