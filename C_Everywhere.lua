@@ -27,13 +27,12 @@ setmetatable(C, {__index = function(C, space)
   local container = {}
 
   setmetatable(container, {__index = function(container, k)
-    local f = container.rawget(k)
-    assert(f, format('%s not found in C_%s nor global namespaces', k, space))
+    local f = container.rawfind(k)
     container[k] = f
     return f
   end})
 
-  container.rawget = function(k) return target and target[k] or _G[k] end
+  container.rawfind = function(k) return target and target[k] or _G[k] end
   container.locate = function(k) return target and target[k] and target or _G end
   container.hooksecurefunc = function(k, f) hooksecurefunc(container.locate(k), k, f) end
   C[space] = container
@@ -41,7 +40,7 @@ setmetatable(C, {__index = function(C, space)
 end})
 
 local function pack(space, k, args)
-  local f = space.rawget(k)
+  local f = space.rawfind(k)
   if f then
     space[k] = function(...)
       local data = f(...)

@@ -43,19 +43,25 @@ end
 ```
 
 It does so by lazily just-in-time building namespaces and compiling lua functions optimized for the current client.
+### Advanced
+As shown, when a namesapce `C.Some_Namespace` is requested, C_Everywhere returns a virtual namespace that abstracts the process of finding and optimizing APIs. These virtual namespaces also provide some extra functions:
 
-### Details
-C_Everywhere handles the most common refactorings:
+ Function | Description | Input | Return
+ -------- | ----------- | ----- | ------- 
+.rawfind(api) | Forces a search for the requested API, without using any of the other features or optimizations. | string | function
+.locate(api) | Returns the real namespace in which the API can be found. | string | table
+.hooksecurefunc(api, call) | Shorthand, equivalent to `hooksecurefunc(.locate(api), api, call)` | string, function | nil
 
-- API moving namespaces.
-- Change of output from a variable list to a single structured (table) variable.
-
-:warning: It cannot implement APIs that don't have a direct equivalent in the current client. It also does not handle modifications to input arguments.  
-:bulb: If I missed implementing output packing for one function you require, please submit a pull request. It only takes a single line of code to implement. Here' is `GetBackpackCurrencyInfo` implementation:
+:bulb: If I missed implementing output packing into structured code for a function you require, please submit a pull request. It only takes a single line of code to implement in the source code. Here is `GetBackpackCurrencyInfo` implementation:
 
 ```lua
 pack(C.CurrencyInfo, 'GetBackpackCurrencyInfo', 'name, quantity, iconFileID, currencyTypesID')
 ```
 
-### Reminder!
+### Limitations 
+**C_Everywhere** is not a virtual machine. It only handles the two most common forms of refactoring: API moving namespaces; and change of output from a variable list to a single structured (table) variable.  
+It cannot implement APIs that don't have a direct equivalent in the current client. It also does not handle discrepancies to input arguments.  
+
+
+### :warning: Reminder!
 If you use this library, please list it as one of your dependencies in the CurseForge admin system. It's a big help! :+1:
