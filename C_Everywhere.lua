@@ -15,7 +15,7 @@ GNU General Public License for more details.
 This file is part of C_Everywhere.
 --]]
 
-local C = LibStub:NewLibrary('C_Everywhere', 1)
+local C = LibStub:NewLibrary('C_Everywhere', 2)
 if C then
   wipe(C)
 else
@@ -49,6 +49,7 @@ local function pack(space, k, args)
           space[k] = f
           return data
         else
+          local first = args:match('^%s*([^,]+)')
           local assignment = {}
           for _, arg in ipairs{strsplit(',', args)} do
             tinsert(assignment, arg .. '=' .. arg)
@@ -57,9 +58,11 @@ local function pack(space, k, args)
           local packer = loadstring(format([[
             return function(...)
               local %s = f(...)
-              return {%s}
+              if %s ~= nil then
+                return {%s}
+              end
             end
-          ]], args, strjoin(',', unpack(assignment)), first))
+          ]], args, first, strjoin(',', unpack(assignment)), first))
 
           setfenv(packer, {f = f})
           space[k] = packer()
