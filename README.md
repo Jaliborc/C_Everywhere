@@ -5,7 +5,7 @@
 
 A JIT library that simplifies developing World of Wacraft addons which support multiple client versions. Code for latest expansion, run everywhere.
 
-### Overview
+## Overview
 Since Blizzard started refactoring the game's API, but only on it's retail servers, supporting the multiple clients often results in a choice between duplicated or unneficient code (so much spaghetti :spaghetti:!), even when using version-dependent code compilers.
 
 Here is an implementation for printing link and quantity of the first 3 tracked currencies, running on both Dragonflight and Wrath of the Lich King:
@@ -43,7 +43,7 @@ end
 ```
 
 It does so by lazily just-in-time building namespaces and compiling lua functions optimized for the current client.
-### Advanced
+## Advanced
 As shown, when a namesapce `C.Some_Namespace` is requested, C_Everywhere returns a virtual namespace that abstracts the process of finding and optimizing APIs. These virtual namespaces also provide some extra functions:
 
  Function | Description | Input | Return
@@ -58,10 +58,13 @@ As shown, when a namesapce `C.Some_Namespace` is requested, C_Everywhere returns
 pack(C.CurrencyInfo, 'GetBackpackCurrencyInfo', 'name, quantity, iconFileID, currencyTypesID')
 ```
 
-### Limitations 
-**C_Everywhere** is not a virtual machine. It only handles the two most common forms of refactoring: API moving namespaces; and change of output from a variable list to a single structured (table) variable.  
+## Limitations 
+**C_Everywhere** is not a virtual machine. It only handles three forms of refactoring:
+- API moving namespaces.
+- Change of output from a variable list to a single structured (table) variable.  
+- Tooltip content search.
+
 It cannot implement APIs that don't have a direct equivalent in the current client. It also does not handle discrepancies to input arguments.  
 
-
-### :warning: Reminder!
+## :warning: Reminder!
 If you use this library, please list it as one of your dependencies in the CurseForge admin system. It's a big help! :+1:
