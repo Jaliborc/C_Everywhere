@@ -1,5 +1,5 @@
 --[[
-Copyright 2022-2022 João Cardoso
+Copyright 2022-2023 João Cardoso
 C_Everywhere is distributed under the terms of the GNU General Public License (Version 3).
 As a special exception, the copyright holders of this library give you permission to embed it
 with independent modules to produce an addon, regardless of the license terms of these
@@ -15,7 +15,7 @@ GNU General Public License for more details.
 This file is part of C_Everywhere.
 --]]
 
-local C = LibStub:NewLibrary('C_Everywhere', 4)
+local C = LibStub:NewLibrary('C_Everywhere', 5)
 if C then
   wipe(C)
 else
@@ -93,7 +93,7 @@ if not C_TooltipInfo then
 
       local data = {lines={}}
       for i = 1, tip:NumLines() do
-        data.lines[i] = {args = {nil, {stringVal = _G['C_EverywhereTipTextLeft' .. i]:GetText()}}}
+        data.lines[i] = {leftText = _G['C_EverywhereTipTextLeft' .. i]:GetText()}
       end
       return data
     end
