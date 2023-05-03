@@ -61,8 +61,8 @@ pack(C.CurrencyInfo, 'GetBackpackCurrencyInfo', 'name, quantity, iconFileID, cur
 ## Limitations 
 **C_Everywhere** is not a virtual machine. It only handles three forms of refactoring:
 - API moving namespaces.
+- API moving from frame type to a namespace.
 - Change of output from a variable list to a single structured (table) variable.  
-- Tooltip content search.
 
 It cannot implement APIs that don't have a direct equivalent in the current client. It also does not handle discrepancies to input arguments.  
 

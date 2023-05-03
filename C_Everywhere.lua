@@ -82,10 +82,11 @@ pack(C.CurrencyInfo, 'GetCurrencyListInfo', 'name, isHeader, isHeaderExpanded, i
 
 if not C_TooltipInfo then
   local tip = C_EverywhereTip or CreateFrame('GameTooltip', 'C_EverywhereTip', UIParent, 'GameTooltipTemplate')
+  local meta = getmetatable(tip).__index
   tip:SetOwner(UIParent, 'ANCHOR_NONE')
 
-  C.TooltipInfo.hooksecurefunc = function(k, f) hooksecurefunc(tip, 'S' .. k:sub(2), f) end
-  C.TooltipInfo.namespace = function() return tip end
+  C.TooltipInfo.hooksecurefunc = function(k, f) hooksecurefunc(meta, 'S' .. k:sub(2), f) end
+  C.TooltipInfo.locate = function() return meta end
   C.TooltipInfo.rawfind = function(k)
     local method = tip['S' .. k:sub(2)]
     return function(...)
