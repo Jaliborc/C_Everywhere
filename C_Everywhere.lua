@@ -104,4 +104,5 @@ end
 if not C_Addons then
 	C.Addons.GetAddOnEnableState = function(addon, character)
 		return GetAddOnEnableState(character, addon)
+	end
 end
