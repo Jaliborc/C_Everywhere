@@ -15,62 +15,62 @@ GNU General Public License for more details.
 This file is part of C_Everywhere.
 --]]
 
-local C = LibStub:NewLibrary('C_Everywhere', 5)
+local C = LibStub:NewLibrary('C_Everywhere', 6)
 if C then
-  wipe(C)
+	wipe(C)
 else
-  return
+	return
 end
 
 setmetatable(C, {__index = function(C, space)
-  local target = _G['C_' .. space]
-  local container = {}
+	local target = _G['C_' .. space]
+	local container = {}
 
-  setmetatable(container, {__index = function(container, k)
-    local f = container.rawfind(k) or false
-    container[k] = f
-    return f
-  end})
+	setmetatable(container, {__index = function(container, k)
+		local f = container.rawfind(k) or false
+		container[k] = f
+		return f
+	end})
 
-  container.rawfind = function(k) return target and target[k] or _G[k] end
-  container.locate = function(k) return target and target[k] and target or _G end
-  container.hooksecurefunc = function(k, f) hooksecurefunc(container.locate(k), k, f) end
-  C[space] = container
-  return container
+	container.rawfind = function(k) return target and target[k] or _G[k] end
+	container.locate = function(k) return target and target[k] and target or _G end
+	container.hooksecurefunc = function(k, f) hooksecurefunc(container.locate(k), k, f) end
+	C[space] = container
+	return container
 end})
 
 local function pack(space, k, args)
-  local f = space.rawfind(k)
-  if f then
-    space[k] = function(...)
-      local data = f(...)
-      if data ~= nil then
-        if type(data) == 'table' then
-          space[k] = f
-          return data
-        else
-          local first = args:match('^%s*([^,]+)')
-          local assignment = {}
-          for _, arg in ipairs{strsplit(',', args)} do
-            tinsert(assignment, arg .. '=' .. arg)
-          end
+	local f = space.rawfind(k)
+	if f then
+		space[k] = function(...)
+			local data = f(...)
+			if data ~= nil then
+				if type(data) == 'table' then
+					space[k] = f
+					return data
+				else
+					local first = args:match('^%s*([^,]+)')
+					local assignment = {}
+					for _, arg in ipairs{strsplit(',', args)} do
+						tinsert(assignment, arg .. '=' .. arg)
+					end
 
-          local packer = loadstring(format([[
-            return function(...)
-              local %s = f(...)
-              if %s ~= nil then
-                return {%s}
-              end
-            end
-          ]], args, first, strjoin(',', unpack(assignment)), first))
+					local packer = loadstring(format([[
+						return function(...)
+							local %s = f(...)
+							if %s ~= nil then
+								return {%s}
+							end
+						end
+					]], args, first, strjoin(',', unpack(assignment)), first))
 
-          setfenv(packer, {f = f})
-          space[k] = packer()
-          return space[k](...)
-        end
-      end
-    end
-  end
+					setfenv(packer, {f = f})
+					space[k] = packer()
+					return space[k](...)
+				end
+			end
+		end
+	end
 end
 
 pack(C.Container, 'GetContainerItemInfo', 'iconFileID, stackCount, isLocked, quality, isReadable, hasLoot, hyperlink, isFiltered, hasNoValue, itemID, isBound')
@@ -81,22 +81,27 @@ pack(C.CurrencyInfo, 'GetCurrencyInfo', 'name, quantity, iconFileID, quantityEar
 pack(C.CurrencyInfo, 'GetCurrencyListInfo', 'name, isHeader, isHeaderExpanded, isTypeUnused, isShowInBackpack, quantity, iconFileID, maxQuantity, canEarnPerWeek, quantityEarnedThisWeek, discovered')
 
 if not C_TooltipInfo then
-  local tip = C_EverywhereTip or CreateFrame('GameTooltip', 'C_EverywhereTip', UIParent, 'GameTooltipTemplate')
-  local meta = getmetatable(tip).__index
-  tip:SetOwner(UIParent, 'ANCHOR_NONE')
+	local tip = C_EverywhereTip or CreateFrame('GameTooltip', 'C_EverywhereTip', UIParent, 'GameTooltipTemplate')
+	local meta = getmetatable(tip).__index
+	tip:SetOwner(UIParent, 'ANCHOR_NONE')
 
-  C.TooltipInfo.hooksecurefunc = function(k, f) hooksecurefunc(meta, 'S' .. k:sub(2), f) end
-  C.TooltipInfo.locate = function() return meta end
-  C.TooltipInfo.rawfind = function(k)
-    local method = tip['S' .. k:sub(2)]
-    return function(...)
-      method(tip, ...)
+	C.TooltipInfo.hooksecurefunc = function(k, f) hooksecurefunc(meta, 'S' .. k:sub(2), f) end
+	C.TooltipInfo.locate = function() return meta end
+	C.TooltipInfo.rawfind = function(k)
+		local method = tip['S' .. k:sub(2)]
+		return function(...)
+			method(tip, ...)
 
-      local data = {lines={}}
-      for i = 1, tip:NumLines() do
-        data.lines[i] = {leftText = _G['C_EverywhereTipTextLeft' .. i]:GetText()}
-      end
-      return data
-    end
-  end
+			local data = {lines={}}
+			for i = 1, tip:NumLines() do
+				data.lines[i] = {leftText = _G['C_EverywhereTipTextLeft' .. i]:GetText()}
+			end
+			return data
+		end
+	end
+end
+
+if not C_Addons then
+	C.Addons.GetAddOnEnableState = function(addon, character)
+		return GetAddOnEnableState(character, addon)
 end
