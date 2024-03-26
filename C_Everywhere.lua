@@ -15,7 +15,7 @@ GNU General Public License for more details.
 This file is part of C_Everywhere.
 --]]
 
-local C = LibStub:NewLibrary('C_Everywhere', 6)
+local C = LibStub:NewLibrary('C_Everywhere', 7)
 if C then
 	wipe(C)
 else
@@ -90,12 +90,17 @@ if not C_TooltipInfo then
 	C.TooltipInfo.rawfind = function(k)
 		local method = tip['S' .. k:sub(2)]
 		return function(...)
+			tip:ClearLines()
+			if not tip:IsOwned(UIParent) then
+				tip:SetOwner(UIParent, 'ANCHOR_NONE')
+			end
 			method(tip, ...)
 
 			local data = {lines={}}
 			for i = 1, tip:NumLines() do
 				data.lines[i] = {leftText = _G['C_EverywhereTipTextLeft' .. i]:GetText()}
 			end
+			tip:Hide()
 			return data
 		end
 	end
