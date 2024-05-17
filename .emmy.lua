@@ -1,5 +1,5 @@
 ---@class C_Everywhere
-C = {}
+local C = {}
 
 C.AccountInfo = C_AccountInfo
 C.AccountServices = C_AccountServices
