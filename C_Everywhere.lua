@@ -15,7 +15,7 @@ GNU General Public License for more details.
 This file is part of C_Everywhere.
 --]]
 
-local C = LibStub:NewLibrary('C_Everywhere', 6)
+local C = LibStub:NewLibrary('C_Everywhere', 7)
 if C then
 	wipe(C)
 else
@@ -101,8 +101,8 @@ if not C_TooltipInfo then
 	end
 end
 
-if not C_Addons then
-	C.Addons.GetAddOnEnableState = function(addon, character)
+if not C_AddOns then
+	C.AddOns.GetAddOnEnableState = function(addon, character)
 		return GetAddOnEnableState(character, addon)
 	end
 end
