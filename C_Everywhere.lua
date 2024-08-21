@@ -15,13 +15,14 @@ GNU General Public License for more details.
 This file is part of C_Everywhere.
 --]]
 
-local C = LibStub:NewLibrary('C_Everywhere', 7)
+local C = LibStub:NewLibrary('C_Everywhere', 8)
 if C then
 	wipe(C)
 else
 	return
 end
 
+-- magic
 setmetatable(C, {__index = function(C, space)
 	local target = _G['C_' .. space]
 	local container = {}
@@ -39,6 +40,7 @@ setmetatable(C, {__index = function(C, space)
 	return container
 end})
 
+-- specifics
 local function pack(space, k, args)
 	local f = space.rawfind(k)
 	if f then
@@ -89,7 +91,7 @@ if not C_TooltipInfo then
 	C.TooltipInfo.locate = function() return meta end
 	C.TooltipInfo.rawfind = function(k)
 		local method = tip['S' .. k:sub(2)]
-		return function(...)
+		return method and function(...)
 			method(tip, ...)
 
 			local data = {lines={}}
