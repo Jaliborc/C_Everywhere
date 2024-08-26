@@ -15,7 +15,7 @@ GNU General Public License for more details.
 This file is part of C_Everywhere.
 --]]
 
-local C = LibStub:NewLibrary('C_Everywhere', 9)
+local C = LibStub:NewLibrary('C_Everywhere', 10)
 if C then
 	wipe(C)
 else
@@ -109,3 +109,5 @@ if not C_AddOns then
 		return GetAddOnEnableState(character, addon)
 	end
 end
+
+C.Item.IsDressableItemByID = IsDressableItem
