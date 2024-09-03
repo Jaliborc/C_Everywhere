@@ -15,7 +15,7 @@ GNU General Public License for more details.
 This file is part of C_Everywhere.
 --]]
 
-local C = LibStub:NewLibrary('C_Everywhere', 10)
+local C = LibStub:NewLibrary('C_Everywhere', 11)
 if C then
 	wipe(C)
 else
@@ -86,13 +86,13 @@ pack(C.Spell, 'GetSpellInfo', 'name, rank, iconID, castTime, minRange, maxRange,
 if not C_TooltipInfo then
 	local tip = C_EverywhereTip or CreateFrame('GameTooltip', 'C_EverywhereTip', UIParent, 'GameTooltipTemplate')
 	local meta = getmetatable(tip).__index
-	tip:SetOwner(UIParent, 'ANCHOR_NONE')
 
 	C.TooltipInfo.hooksecurefunc = function(k, f) hooksecurefunc(meta, 'S' .. k:sub(2), f) end
 	C.TooltipInfo.locate = function() return meta end
 	C.TooltipInfo.rawfind = function(k)
 		local method = tip['S' .. k:sub(2)]
 		return method and function(...)
+			tip:SetOwner(UIParent, 'ANCHOR_NONE')
 			method(tip, ...)
 
 			local data = {lines={}}
