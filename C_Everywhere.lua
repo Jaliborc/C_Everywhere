@@ -79,6 +79,7 @@ pack(C.Container, 'GetContainerItemInfo', 'iconFileID, stackCount, isLocked, qua
 pack(C.Container, 'GetContainerItemPurchaseInfo', 'money, itemCount, refundSeconds, currencyCount, hasEnchants')
 pack(C.Container, 'GetContainerItemQuestInfo', 'isQuestItem, questID, isActive')
 pack(C.CurrencyInfo, 'GetBackpackCurrencyInfo', 'name, quantity, iconFileID, currencyTypesID')
+pack(C.CurrencyInfo, 'GetBasicCurrencyInfo', 'name, description, icon, quality, displayAmount, actualAmount')
 pack(C.CurrencyInfo, 'GetCurrencyInfo', 'name, quantity, iconFileID, quantityEarnedThisWeek, maxWeeklyQuantity, maxQuantity, discovered, quality')
 pack(C.CurrencyInfo, 'GetCurrencyListInfo', 'name, isHeader, isHeaderExpanded, isTypeUnused, isShowInBackpack, quantity, iconFileID, maxQuantity, canEarnPerWeek, quantityEarnedThisWeek, discovered')
 pack(C.Spell, 'GetSpellInfo', 'name, rank, iconID, castTime, minRange, maxRange, spellID, originalIconID')
