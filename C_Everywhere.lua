@@ -15,7 +15,7 @@ GNU General Public License for more details.
 This file is part of C_Everywhere.
 --]]
 
-local C = LibStub:NewLibrary('C_Everywhere', 10)
+local C = LibStub:NewLibrary('C_Everywhere', 12)
 if C then
 	wipe(C)
 else
@@ -79,20 +79,26 @@ pack(C.Container, 'GetContainerItemInfo', 'iconFileID, stackCount, isLocked, qua
 pack(C.Container, 'GetContainerItemPurchaseInfo', 'money, itemCount, refundSeconds, currencyCount, hasEnchants')
 pack(C.Container, 'GetContainerItemQuestInfo', 'isQuestItem, questID, isActive')
 pack(C.CurrencyInfo, 'GetBackpackCurrencyInfo', 'name, quantity, iconFileID, currencyTypesID')
+pack(C.CurrencyInfo, 'GetBasicCurrencyInfo', 'name, description, icon, quality, displayAmount, actualAmount')
 pack(C.CurrencyInfo, 'GetCurrencyInfo', 'name, quantity, iconFileID, quantityEarnedThisWeek, maxWeeklyQuantity, maxQuantity, discovered, quality')
 pack(C.CurrencyInfo, 'GetCurrencyListInfo', 'name, isHeader, isHeaderExpanded, isTypeUnused, isShowInBackpack, quantity, iconFileID, maxQuantity, canEarnPerWeek, quantityEarnedThisWeek, discovered')
 pack(C.Spell, 'GetSpellInfo', 'name, rank, iconID, castTime, minRange, maxRange, spellID, originalIconID')
 
+C.CurrencyInfo.IsAccountTransferableCurrency = C.CurrencyInfo.IsAccountTransferableCurrency or nop
+C.CurrencyInfo.IsAccountWideCurrency = C.CurrencyInfo.IsAccountWideCurrency or nop
+C.Bank.CanViewBank = C.Bank.CanViewBank or function(v) return v == 0 end
+C.Item.IsDressableItemByID = IsDressableItem
+
 if not C_TooltipInfo then
 	local tip = C_EverywhereTip or CreateFrame('GameTooltip', 'C_EverywhereTip', UIParent, 'GameTooltipTemplate')
 	local meta = getmetatable(tip).__index
-	tip:SetOwner(UIParent, 'ANCHOR_NONE')
 
 	C.TooltipInfo.hooksecurefunc = function(k, f) hooksecurefunc(meta, 'S' .. k:sub(2), f) end
 	C.TooltipInfo.locate = function() return meta end
 	C.TooltipInfo.rawfind = function(k)
 		local method = tip['S' .. k:sub(2)]
 		return method and function(...)
+			tip:SetOwner(UIParent, 'ANCHOR_NONE')
 			method(tip, ...)
 
 			local data = {lines={}}
@@ -109,5 +115,3 @@ if not C_AddOns then
 		return GetAddOnEnableState(character, addon)
 	end
 end
-
-C.Item.IsDressableItemByID = IsDressableItem
