@@ -15,7 +15,7 @@ GNU General Public License for more details.
 This file is part of C_Everywhere.
 --]]
 
-local C = LibStub:NewLibrary('C_Everywhere', 13)
+local C = LibStub:NewLibrary('C_Everywhere', 14)
 if C then
 	wipe(C)
 else
@@ -91,8 +91,9 @@ null(C.CurrencyInfo, 'IsAccountWideCurrency')
 null(C.QuestLog, 'IsQuestFlaggedCompletedOnAccount')
 pack(C.Spell, 'GetSpellInfo', 'name, rank, iconID, castTime, minRange, maxRange, spellID, originalIconID')
 
-C.QuestLog.IsComplete = C.QuestLog.IsComplete or function(id) return select(6, GetQuestLogTitle(GetQuestLogIndexByID(id))) == 1 end
 C.Bank.CanViewBank = C.Bank.CanViewBank or function(v) return v == 0 end
+C.QuestLog.IsComplete = C.QuestLog.IsComplete or function(id) return select(6, GetQuestLogTitle(GetQuestLogIndexByID(id))) == 1 end
+C.QuestLog.GetTitleForQuestID = C.QuestLog.GetQuestInfo
 C.Item.IsDressableItemByID = IsDressableItem
 C.GossipInfo.SelectActiveQuest = SelectGossipActiveQuest
 C.GossipInfo.SelectAvailableQuest = SelectGossipAvailableQuest
