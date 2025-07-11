@@ -94,6 +94,7 @@ pack(C.Spell, 'GetSpellInfo', 'name, rank, iconID, castTime, minRange, maxRange,
 C.Bank.CanViewBank = C.Bank.CanViewBank or function(v) return v == 0 end
 C.QuestLog.IsComplete = C.QuestLog.IsComplete or function(id) return select(6, GetQuestLogTitle(GetQuestLogIndexByID(id))) == 1 end
 C.QuestLog.GetTitleForQuestID = C.QuestLog.GetQuestInfo
+C.Item.GetItemIconByID = GetItemIcon
 C.Item.IsDressableItemByID = IsDressableItem
 C.GossipInfo.SelectActiveQuest = SelectGossipActiveQuest
 C.GossipInfo.SelectAvailableQuest = SelectGossipAvailableQuest
