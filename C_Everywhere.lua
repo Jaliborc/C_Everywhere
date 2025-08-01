@@ -15,7 +15,7 @@ GNU General Public License for more details.
 This file is part of C_Everywhere.
 --]]
 
-local C = LibStub:NewLibrary('C_Everywhere', 15)
+local C = LibStub:NewLibrary('C_Everywhere', 16)
 if C then
 	wipe(C)
 else
@@ -93,6 +93,7 @@ pack(C.Spell, 'GetSpellInfo', 'name, rank, iconID, castTime, minRange, maxRange,
 
 stub(C.QuestLog, 'IsComplete', function(id) return select(6, GetQuestLogTitle(GetQuestLogIndexByID(id))) == 1 end)
 stub(C.Bank, 'PurchaseBankTab', PurchaseSlot)
+stub(C.Bank, 'CanUseBank', function(i) return i == 0 end)
 stub(C.Bank, 'CanViewBank', function(i) return i == 0 end)
 stub(C.Bank, 'FetchNextPurchasableBankTabData', function(i) return {tabCost = i == 0 and GetBankSlotCost() or C.Bank.FetchNextPurchasableBankTabCost(i)} end)
 
