@@ -3,7 +3,7 @@
 [![Paypal](http://img.shields.io/badge/donate-paypal-1d3fe5)](https://www.paypal.me/jaliborc)
 [![Discord](http://img.shields.io/badge/discuss-discord-5865F2)](https://bit.ly/discord-jaliborc)
 
-A JIT library that simplifies developing World of Wacraft addons which support multiple client versions. Code for latest expansion, run everywhere.
+A JIT compiled emulation library that simplifies developing World of Wacraft addons which support multiple client versions. Code for latest expansion, run everywhere.
 
 ## Overview
 Since Blizzard started refactoring the game's API, but only on it's retail servers, supporting the multiple clients often results in a choice between duplicated or unneficient code (so much spaghetti :spaghetti:!), even when using version-dependent code compilers.

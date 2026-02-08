@@ -1,0 +1,7 @@
+## Title: C_Everywhere
+## Notes: JIT converts WoW API depending on client version. Code for retail, run everywhere.
+## Interface: 120001, 120000, 50501, 40402, 30404, 20505, 11507
+## Author: Jaliborc (João Cardoso)
+## Category: Libraries
+
+C_Everywhere.xml
