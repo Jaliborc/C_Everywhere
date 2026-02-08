@@ -1,0 +1,49 @@
+name: Tag from Library Version
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  tag:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Fetches all tags and history
+
+      - name: Extract Version
+        id: get_version
+        run: |
+          # Search all .lua files recursively for the LibStub pattern
+          # -r: recursive, -l: only show filenames
+          FILE_PATH=$(grep -rl "LibStub:NewLibrary" --include="*.lua" . | head -n 1)
+
+          if [ -z "$FILE_PATH" ]; then
+            echo "Error: Could not find any Lua file containing LibStub:NewLibrary"
+            exit 1
+          fi
+
+          echo "Found version string in: $FILE_PATH"
+
+          # Extract the number after the comma (handles numbers or decimals)
+          VERSION=$(grep "LibStub:NewLibrary" "$FILE_PATH" | sed -E 's/.*,[[:space:]]*([0-9.]+).*/\1/')
+          
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Create and Push Tag
+        run: |
+          TAG_NAME="v${{ steps.get_version.outputs.version }}"
+          
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # Only tag and push if the tag doesn't already exist
+          if git rev-parse "$TAG_NAME" >/dev/null 2>&1; then
+            echo "Tag $TAG_NAME already exists. Skipping push."
+          else
+            git tag "$TAG_NAME"
+            git push origin "$TAG_NAME"
+          fi
