@@ -3,7 +3,7 @@ name: Tag Library Version
 on:
   push:
     branches:
-      - main
+      - master
   workflow_dispatch: # This enables manual triggering
 
 jobs:
