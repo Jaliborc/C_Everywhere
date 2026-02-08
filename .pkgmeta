@@ -1,3 +1,0 @@
-package-as: C_Everywhere
-ignore:
-  - Tests.lua
