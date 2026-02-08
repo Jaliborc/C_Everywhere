@@ -1,4 +1,4 @@
-name: Tag from Library Version
+name: Tag Library Version
 
 on:
   push:
@@ -36,7 +36,7 @@ jobs:
 
       - name: Create and Push Tag
         run: |
-          TAG_NAME="v${{ steps.get_version.outputs.version }}"
+          TAG_NAME="${{ steps.get_version.outputs.version }}"
           
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
