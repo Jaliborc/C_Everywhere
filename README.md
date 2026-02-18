@@ -59,12 +59,13 @@ pack(C.CurrencyInfo, 'GetBackpackCurrencyInfo', 'name, quantity, iconFileID, cur
 ```
 
 ## Limitations 
-**C_Everywhere** is not a virtual machine. It only handles three forms of refactoring:
+**C_Everywhere** is not a full virtual machine. While it is able to entirely automatically handle common refactoring patterns, for some APIs conversion has to be implemented manually, of which 100% coverage is not guaranteed.  
+Here are examples of conversions that it currently does:
 - API moving namespaces.
-- API moving from frame type to a namespace.
-- Change of output from a variable list to a single structured (table) variable.  
-
-It cannot implement APIs that don't have a direct equivalent in the current client. It also does not handle discrepancies to input arguments.  
+- API moving from frame type to a namespace _(ex: GameTooltip -> C_Tooltip)_.
+- Change of outputs from a variable list to single structured (table) variables.  
+- Change in input arguments, or input argument order.
+- Functions from Retail that do not have a direct equivalent everywhere, and should return a static value in those situations _(ex: bank is always type `0` in Classic)_.
 
 ## :warning: Reminder!
 If you use this library, please list it as one of your dependencies in the CurseForge admin system. It's a big help! :+1:
