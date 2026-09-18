@@ -13,7 +13,7 @@ Here is an implementation for printing link and quantity of the first 3 tracked 
 ```lua
 for i = 0, 3 do
     local id, quantity
-    if LE_EXPANSION_LEVEL_CURRENT >= LE_EXPANSION_DRAGONFLIGHT then
+    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE or LE_EXPANSION_LEVEL_CURRENT >= LE_EXPANSION_DRAGONFLIGHT then
         local data = C_CurrencyInfo.GetBackpackCurrencyInfo(i)
         if data then
             id = data.currencyTypesID
